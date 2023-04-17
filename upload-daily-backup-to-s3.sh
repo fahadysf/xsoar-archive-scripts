@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# README: This script will upload all files from your ARCHIVE_FOLDER to
+# README: This script will upload all files from your DAILY_BACKUP_FOLDER to
 # a path on an S3 bucket specified by S3_ROOT_PATH. Once the upload is
 # successful and the filesizes match for the uploaded and local file
 # it will delete the local file.
 # -------------------------------------------------------------------
-ARCHIVE_FOLDER="/var/lib/demisto/backup"
+DAILY_BACKUP_FOLDER="/var/lib/demisto/backup"
 S3_ROOT_PATH="s3://fy-s3-bucket-test/demisto-backup"
 
 # S3 upload function
@@ -16,7 +16,7 @@ function upload_to_s3() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')] Executing: aws s3 cp $filepath $S3_ROOT_PATH/$dir/$filename"
     aws s3 cp $filepath "$S3_ROOT_PATH/$dir/$filename"
 }
-dir=$ARCHIVE_FOLDER
+dir=$DAILY_BACKUP_FOLDER
 echo ""
 echo "Working on $dir:"
 for file in $(find $dir -type f -regex ".*\.gzip" )
