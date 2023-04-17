@@ -7,6 +7,7 @@
 # -------------------------------------------------------------------
 ARCHIVE_FOLDER="/var/lib/demisto-archive"
 S3_ROOT_PATH="s3://fy-s3-bucket-test/demisto-archive"
+DELETE_LOCAL_DATA=true
 
 # S3 upload function
 function upload_to_s3() {
@@ -17,9 +18,12 @@ function upload_to_s3() {
     aws s3 cp $filepath "$S3_ROOT_PATH/$dir/$filename"
 }
 
+# Print size of archived data to be uploaded
+archive_folder_size=$(du -hs $ARCHIVE_FOLDER/)
+echo "[$(date "+%Y-%m-%d %H:%M:%S")] Size of compressed data in $ARCHIVE_FOLDER to be uploaded to S3 is $archive_folder_size"
 for dir in $ARCHIVE_FOLDER/*/
 do
-    echo ""
+    echo "------- Starting Upload -------"
     echo "Working on $dir:"
     for file in $(find $dir -type f -regex ".*\.gz" )
     do 
@@ -32,7 +36,7 @@ do
         filesize_s3=$(aws s3 ls $S3_ROOT_PATH/$base_dirname/$base_filename | awk '{print $3}')
         if [ "$filesize_s3" -eq "$filesize" ]; then
             echo "[$(date +'%Y-%m-%d %H:%M:%S')] Filesizes for $base_filename equal on S3 and locally. Deleting local copy";
-            rm $filepath
+	    if $DELETE_LOCAL_DATA ; then rm $filepath ; fi
         else 
             echo "[$(date +'%Y-%m-%d %H:%M:%S')] For $base_filename. Localsize: $filesize, S3 uploaded size: $filesize_s3"
         fi
