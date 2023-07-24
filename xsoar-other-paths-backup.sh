@@ -24,7 +24,7 @@ mkdir -p $BACKUP_PATH
 echo "Backup attempted at $(date)" > $BACKUP_LOG
 for i in "${items[@]}"
 do
-    tarfilename=$(echo $i | sed "s/\//_/g" | sed 's/^.//g')".tar.gz"
+    tarfilename=$(echo $i | sed "s/\//_/g" | sed 's/^.//g')".$(date +"%Y%m%d%H%M%S").tar.gz"
     echo $(date +"[%Y-%m-%d %H:%M:%S]")" Saving conents of $i in $tarfilename" >> $BACKUP_LOG
     tar -czf $tarfilename $i >>$BACKUP_LOG 2>&1
 done

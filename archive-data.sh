@@ -10,7 +10,9 @@ BASE_LOCATION="/var/lib/demisto/data"
 ARCHIVE_FOLDER="/var/lib/demisto-archive"
 # Threshold of oldness in days to archive data for
 THRESHOLD=60
-DELETE_LOCAL=true
+
+# Use with care. This will delete the local copy of the data
+DELETE_LOCAL=false
 
 # Core activity
 mkdir -p $ARCHIVE_FOLDER
